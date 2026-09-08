@@ -26,4 +26,35 @@ describe('PromptInput', () => {
     render(<PromptInput onGenerate={vi.fn()} isLoading={true} />);
     expect(screen.getByRole('button', { name: '생성 중...' })).toBeDisabled();
   });
+
+  it('500자를 초과하면 생성 버튼이 비활성이다', async () => {
+    const user = userEvent.setup();
+    render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);
+
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, 'a'.repeat(501));
+
+    expect(screen.getByRole('button', { name: '컴포넌트 생성' })).toBeDisabled();
+    expect(screen.getByText('프롬프트는 500자 이내여야 합니다.')).toBeInTheDocument();
+  });
+
+  it('글자 수 카운터를 표시한다', async () => {
+    const user = userEvent.setup();
+    render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);
+
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, '테스트');
+
+    expect(screen.getByText('3 / 500')).toBeInTheDocument();
+  });
+
+  it('정확히 500자면 생성 버튼이 활성이다', async () => {
+    const user = userEvent.setup();
+    render(<PromptInput onGenerate={vi.fn()} isLoading={false} />);
+
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, 'a'.repeat(500));
+
+    expect(screen.getByRole('button', { name: '컴포넌트 생성' })).toBeEnabled();
+  });
 });

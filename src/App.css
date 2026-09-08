@@ -361,6 +361,29 @@
   color: var(--primary);
 }
 
+.prompt-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+
+.char-count {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.char-count--error {
+  color: var(--danger);
+  font-weight: 650;
+}
+
+.validation-error {
+  color: var(--danger);
+  font-weight: 500;
+}
+
 .error-banner {
   padding: 14px 16px;
   background: rgba(248, 113, 113, 0.1);
