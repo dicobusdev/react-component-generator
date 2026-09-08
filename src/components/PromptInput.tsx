@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { validatePrompt } from '../utils/validatePrompt';
+import { getStorageItem, setStorageItem, STORAGE_KEYS } from '../utils/storage';
 
 interface PromptInputProps {
   onGenerate: (prompt: string) => void;
@@ -15,20 +16,39 @@ const EXAMPLES = [
   '테이블 행 상세보기 패널. 선택한 고객의 기본 정보와 최근 활동 표시',
 ];
 
+const MAX_HISTORY = 10;
+
 export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
   const [prompt, setPrompt] = useState('');
+  const [history, setHistory] = useState<string[]>(() =>
+    getStorageItem(STORAGE_KEYS.PROMPT_HISTORY, [])
+  );
   const validation = validatePrompt(prompt);
   const isLengthExceeded = prompt.trim().length > 500;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validation.valid && !isLoading) {
-      onGenerate(prompt.trim());
+      const trimmedPrompt = prompt.trim();
+      onGenerate(trimmedPrompt);
+
+      setHistory((prev) => {
+        const updated = [trimmedPrompt, ...prev.filter((p) => p !== trimmedPrompt)];
+        return updated.slice(0, MAX_HISTORY);
+      });
     }
   };
 
+  useEffect(() => {
+    setStorageItem(STORAGE_KEYS.PROMPT_HISTORY, history);
+  }, [history]);
+
   const handleExampleClick = (example: string) => {
     setPrompt(example);
+  };
+
+  const handleHistoryClick = (historyPrompt: string) => {
+    setPrompt(historyPrompt);
   };
 
   return (
@@ -71,6 +91,26 @@ export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
           <span className="validation-error">{validation.error}</span>
         )}
       </div>
+
+      {history.length > 0 && (
+        <div className="prompt-history">
+          <span className="history-label">최근 프롬프트</span>
+          <div className="history-list">
+            {history.map((historyPrompt, index) => (
+              <button
+                key={`${historyPrompt}-${index}`}
+                className="history-chip"
+                onClick={() => handleHistoryClick(historyPrompt)}
+                type="button"
+                title={historyPrompt}
+              >
+                {historyPrompt.substring(0, 40)}
+                {historyPrompt.length > 40 ? '...' : ''}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="prompt-examples">
         <span className="examples-label">예시 프롬프트</span>

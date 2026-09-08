@@ -361,6 +361,51 @@
   color: var(--primary);
 }
 
+.prompt-history {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.history-label {
+  grid-column: 1 / -1;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.history-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-chip {
+  padding: 8px 12px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease;
+}
+
+.history-chip:hover {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: var(--primary);
+  color: var(--text-muted);
+}
+
 .prompt-meta {
   display: flex;
   justify-content: space-between;
