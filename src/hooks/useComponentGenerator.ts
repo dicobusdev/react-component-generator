@@ -13,10 +13,13 @@ interface UseComponentGeneratorReturn {
 
 export function useComponentGenerator(): UseComponentGeneratorReturn {
   const [components, setComponents] = useState<GeneratedComponent[]>(() =>
-    getStorageItem<GeneratedComponent[]>(STORAGE_KEYS.COMPONENTS, []).map((c) => ({
-      ...c,
-      createdAt: new Date(c.createdAt),
-    }))
+    getStorageItem<GeneratedComponent[]>(STORAGE_KEYS.COMPONENTS, []).map((c) => {
+      const date = new Date(c.createdAt);
+      return {
+        ...c,
+        createdAt: !isNaN(date.getTime()) ? date : new Date(),
+      };
+    })
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

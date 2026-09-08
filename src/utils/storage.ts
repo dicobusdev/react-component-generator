@@ -30,3 +30,29 @@ export function removeStorageItem(key: string): void {
     console.warn(`Failed to remove from localStorage: ${key}`, err);
   }
 }
+
+export function getSessionItem<T>(key: string, defaultValue: T): T {
+  try {
+    const item = sessionStorage.getItem(key);
+    if (!item) return defaultValue;
+    return JSON.parse(item);
+  } catch {
+    return defaultValue;
+  }
+}
+
+export function setSessionItem<T>(key: string, value: T): void {
+  try {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {
+    console.warn(`Failed to save to sessionStorage: ${key}`, err);
+  }
+}
+
+export function removeSessionItem(key: string): void {
+  try {
+    sessionStorage.removeItem(key);
+  } catch (err) {
+    console.warn(`Failed to remove from sessionStorage: ${key}`, err);
+  }
+}

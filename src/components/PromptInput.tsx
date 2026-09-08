@@ -96,9 +96,9 @@ export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
         <div className="prompt-history">
           <span className="history-label">최근 프롬프트</span>
           <div className="history-list">
-            {history.map((historyPrompt, index) => (
+            {history.map((historyPrompt) => (
               <button
-                key={`${historyPrompt}-${index}`}
+                key={historyPrompt}
                 className="history-chip"
                 onClick={() => handleHistoryClick(historyPrompt)}
                 type="button"
